@@ -1,0 +1,3 @@
+build/
+static_server.js
+src/*.js
