@@ -40,7 +40,6 @@ http.createServer(function(request, response) {
       }
       
       var mimeType = mimeTypes[filename.split('.').pop()];
-      console.log(filename, mimeType)
       
       if (!mimeType) {
         mimeType = 'text/plain';
@@ -54,3 +53,21 @@ http.createServer(function(request, response) {
 }).listen(parseInt(port, 10));
 
 console.log("Static file server running at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
+
+// https://github.com/evanw/esbuild/issues/21#issuecomment-625418280
+var chokidar = require('chokidar');
+var watcher = chokidar.watch('src', {persistent: true});
+watcher.on('change', () => {
+  console.log("Rebuild triggered");
+  require('esbuild').build({
+       entryPoints: ['./src/init.ts'],
+       outfile: `dist/out${('development' !== process.env.NODE_ENV) ? '.min' : ''}.js`,
+       minify: 'development' !== process.env.NODE_ENV,
+       bundle: true,
+       sourcemap: 'development' === process.env.NODE_ENV
+  }).catch(() => {console.log("Build failed!");});
+
+  fs.copyFile('node_modules/xterm/css/xterm.css', 'stylesheets/xterm.css', () => {});
+});
+
+console.log("Watching for file changes in src/**/*.ts");

@@ -1,21 +1,24 @@
 {
   "devDependencies": {
+    "@types/node": "^18.0.0",
+    "esbuild": "^0.14.48",
     "gts": "^3.1.0",
     "typescript": "^4.7.4",
-    "xterm": "^4.18.0",
-    "@types/node": "^18.0.0"
+    "chokidar": "^3.5.3"
   },
   "scripts": {
     "lint": "gts lint",
     "clean": "gts clean",
-    "compile": "tsc",
+    "compile": "esbuild src/init.ts --bundle --outfile=dist/out.js",
     "fix": "gts fix",
     "prepare": "npm run compile",
     "pretest": "npm run compile",
     "posttest": "npm run lint"
   },
-
   "engines": {
     "node": ">=12.0.0"
+  },
+  "dependencies": {
+    "xterm": "^4.18.0"
   }
 }
