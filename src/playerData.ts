@@ -1,8 +1,12 @@
 export interface PlayerData {
   saveRevision: number;
+  username?: string;
+  systemSetup: boolean;
 }
 
-declare let player: PlayerData;
-player.saveRevision = 0;
+const player: PlayerData = {
+  saveRevision: 0,
+  systemSetup: false,
+};
 
 export {player};

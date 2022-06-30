@@ -58,6 +58,7 @@ console.log("Static file server running at\n  => http://localhost:" + port + "/\
 var chokidar = require('chokidar');
 var watcher = chokidar.watch('src', {persistent: true});
 watcher.on('change', () => {
+  console.clear();
   console.log("Rebuild triggered");
   require('esbuild').build({
        entryPoints: ['./src/init.ts'],
@@ -65,7 +66,8 @@ watcher.on('change', () => {
        minify: 'development' !== process.env.NODE_ENV,
        bundle: true,
        sourcemap: 'development' === process.env.NODE_ENV
-  }).catch(() => {console.log("Build failed!");});
+  }).then(() => {console.log("Build Success!");})
+    .catch(() => {console.log("Build failed!");});
 
   fs.copyFile('node_modules/xterm/css/xterm.css', 'stylesheets/xterm.css', () => {});
 });

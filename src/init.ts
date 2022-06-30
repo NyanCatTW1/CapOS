@@ -3,8 +3,8 @@ import {bootOS} from './boot';
 import {setVersionInTitle} from './misc/constant';
 // import {player} from './playerData';
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   setupTerm();
   setVersionInTitle();
-  bootOS();
+  await bootOS();
 });
