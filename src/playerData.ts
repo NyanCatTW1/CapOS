@@ -1,5 +1,5 @@
 export interface PlayerData {
-  saveRevision: Number;
+  saveRevision: number;
 }
 
 declare let player: PlayerData;
