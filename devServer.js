@@ -62,10 +62,10 @@ watcher.on('change', () => {
   console.log("Rebuild triggered");
   require('esbuild').build({
        entryPoints: ['./src/init.ts'],
-       outfile: `dist/out${('development' !== process.env.NODE_ENV) ? '.min' : ''}.js`,
-       minify: 'development' !== process.env.NODE_ENV,
+       outfile: `dist/out.js`,
+       minify: false,
        bundle: true,
-       sourcemap: 'development' === process.env.NODE_ENV
+       sourcemap: true,
   }).then(() => {console.log("Build Success!");})
     .catch(() => {console.log("Build failed!");});
 

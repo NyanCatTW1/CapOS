@@ -1,6 +1,6 @@
 const version = '0.0.0';
 const osName = 'CapOS';
-const companyName = 'PlaceholderInc';
+const companyName = 'The Solvers';
 
 export function setVersionInTitle() {
   document.title = `${osName} v${version}`;
