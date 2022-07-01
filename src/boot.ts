@@ -43,7 +43,7 @@ async function setupSystem() {
     await sleep(1000);
     term.write('.');
   }
-  term.writeln(' Done!');
+  term.writeln(' Success!');
   term.writeln('');
 
   player.systemSetup = true;
