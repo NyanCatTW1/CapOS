@@ -1,11 +1,11 @@
 import {term, lineInput} from './term';
-import {version, osName, companyName} from './misc/constant';
+import {version} from './misc/constant';
 import {sleep} from './misc/asyncHelper';
-import {c} from './misc/termHelper';
+import {printUsername, printCompany, printOS} from './misc/termHelper';
 import {player} from './playerData';
 
 async function setupSystem() {
-  term.writeln(`Setting up ${osName} for the first time...`);
+  term.writeln(`Setting up ${printOS()} for the first time...`);
   await sleep(1000);
   term.writeln('Activating serial code [RW9MG-QR4G3-2WRR9-TG7BH-33GXB]...');
   await sleep(1000);
@@ -17,19 +17,13 @@ async function setupSystem() {
 
   term.clear();
   term.writeln(
-    `Thank you for joining the ${c.blue(
-      osName
-    )} community, brought to you by ${c.blue(companyName)}!`
+    `Thank you for joining the ${printOS()} community, brought to you by ${printCompany()}!`
   );
   term.writeln(
-    `${c.blue(
-      companyName
-    )} is a new-era organization focusing on providing our customers with  state-of-the-art captcha-solving service.`
+    `${printCompany()} is a new-era organization focusing on providing our customers with  state-of-the-art captcha-solving service.`
   );
   term.writeln(
-    `You've chosen ${c.blue(
-      osName
-    )} because you wish to join us in becoming and developing the  next-generation captcha solver.`
+    `You've chosen ${printOS()} because you wish to join us in becoming and developing the  next-generation captcha solver.`
   );
   term.writeln(
     'You will find details on how to start solving captchas after the system setup.'
@@ -37,11 +31,19 @@ async function setupSystem() {
   term.writeln(
     'We wish to see you become one of our most proficient captcha solvers soon!'
   );
-  term.writeln(`- ${c.blue(companyName)}`);
+  term.writeln(`- ${printCompany()}`);
   term.writeln('');
 
   player.username = await lineInput('Please enter your username: ');
-  term.writeln(`Nice to meet you, ${c.green(player.username)}!`);
+  term.writeln(`Nice to meet you, ${printUsername()}!`);
+  term.writeln('');
+
+  term.write(`Registering ${printUsername()} on ${printCompany()}`);
+  for (let i = 0; i < 5; i++) {
+    await sleep(1000);
+    term.write('.');
+  }
+  term.writeln(' Done!');
   term.writeln('');
 
   player.systemSetup = true;
@@ -50,7 +52,9 @@ async function setupSystem() {
 export async function bootOS() {
   term.writeln('Starting ' + version);
   await sleep(600);
-  term.writeln(`smpboot: CPU0: ${companyName}(R) Core(TM) T3-Gen0 CPU @ 1KHz`);
+  term.writeln(
+    `smpboot: CPU0: ${printCompany()}(R) Core(TM) T3-Gen0 CPU @ 1KHz`
+  );
   await sleep(200);
   term.writeln('r8169 0000:02:00.0 eth0: Link is Down');
   await sleep(1000);
@@ -58,10 +62,14 @@ export async function bootOS() {
     'r8169 0000:02:00.0 eth0: Link is Up - 1Pkts/Full - flow control rx/tx'
   );
   await sleep(200);
-  term.writeln('Welcome to ' + c.blue(osName) + '!');
+  term.writeln('Welcome to ' + printOS() + '!');
   term.writeln('');
 
   if (!player.systemSetup) {
     await setupSystem();
+  } else {
+    term.writeln(`Welcome back, ${printUsername()}!`);
   }
+
+  term.writeln("Type 'help' for a list of commands");
 }

@@ -1,3 +1,6 @@
+import {player} from '../playerData';
+import {companyName, osName} from './constant';
+
 const c = require('ansi-colors');
 // Need to enable it manually for some reason
 c.enabled = true;
@@ -17,6 +20,18 @@ export function getSelectionText() {
 
 export function copySelection() {
   navigator.clipboard.writeText(getSelectionText());
+}
+
+export function printUsername() {
+  return c.green(player.username);
+}
+
+export function printOS() {
+  return c.blue(osName);
+}
+
+export function printCompany() {
+  return c.blue(companyName);
 }
 
 export {c};
