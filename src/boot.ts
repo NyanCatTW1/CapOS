@@ -1,7 +1,12 @@
 import {term, lineInput} from './term';
 import {version} from './misc/constant';
 import {sleep} from './misc/asyncHelper';
-import {printUsername, printCompany, printOS} from './misc/termHelper';
+import {
+  printUsername,
+  printCompany,
+  printOS,
+  dotLoadingBar,
+} from './misc/termHelper';
 import {player} from './playerData';
 
 async function setupSystem() {
@@ -17,7 +22,7 @@ async function setupSystem() {
 
   term.clear();
   term.writeln(
-    `Thank you for joining the ${printOS()} community, brought to you by ${printCompany()}!`
+    `Welcome to the ${printOS()} community, brought to you by ${printCompany()}!`
   );
   term.writeln(
     `${printCompany()} is a new-era organization focusing on providing our customers with  state-of-the-art captcha-solving service.`
@@ -40,12 +45,9 @@ async function setupSystem() {
   term.writeln(`Nice to meet you, ${printUsername()}!`);
   term.writeln('');
 
-  term.write(`Registering ${printUsername()} on ${printCompany()}`);
-  for (let i = 0; i < 5; i++) {
-    await sleep(1000);
-    term.write('.');
-  }
-  term.writeln(' Success!');
+  await dotLoadingBar({
+    desc: `Registering ${printUsername()} on ${printCompany()}`,
+  });
   term.writeln('');
 
   player.systemSetup = true;

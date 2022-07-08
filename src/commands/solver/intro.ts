@@ -1,8 +1,11 @@
-import {sleep} from '../../misc/asyncHelper';
-import {printCompany, printUsername} from '../../misc/termHelper';
+import {
+  dotLoadingBar,
+  printCompany,
+  printUsername,
+} from '../../misc/termHelper';
 import {player} from '../../playerData';
 import {lineInput, term} from '../../term';
-import {solverTierUp} from './main';
+import {solverTierUp} from './tier';
 
 export async function solverIntroCmd(
   argc: number,
@@ -28,12 +31,9 @@ export async function solverIntroCmd(
 
   if (player.accountTier < 1) {
     await lineInput('Press enter to complete the intro.');
-    term.write(`Marking intro as complete on ${printCompany()}`);
-    for (let i = 0; i < 5; i++) {
-      await sleep(1000);
-      term.write('.');
-    }
-    term.writeln(' Success!');
+    await dotLoadingBar({
+      desc: `Marking intro as complete on ${printCompany()}`,
+    });
     solverTierUp(1);
   }
   return 0;

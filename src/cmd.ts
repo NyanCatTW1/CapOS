@@ -48,7 +48,8 @@ export async function runCommandHandler() {
 
   for (;;) {
     const cmd = await lineInput(getPS());
-    const argv = cmd.split(' ');
+    // https://stackoverflow.com/a/1981366
+    const argv = cmd.trim().replace(/  +/g, ' ').split(' ');
     const argc = argv.length;
     const cmdName = argv[0];
     if (cmdName === '') {

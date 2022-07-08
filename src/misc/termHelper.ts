@@ -1,4 +1,6 @@
 import {player} from '../playerData';
+import {term} from '../term';
+import {sleep} from './asyncHelper';
 import {companyName, osName} from './constant';
 
 const c = require('ansi-colors');
@@ -36,6 +38,23 @@ export function printCompany(colored = true) {
   } else {
     return companyName;
   }
+}
+
+export async function dotLoadingBar({
+  desc,
+  dots = 5,
+  intervalMs = 1000,
+}: {
+  desc: string;
+  dots?: number;
+  intervalMs?: number;
+}) {
+  term.write(desc);
+  for (let i = 0; i < dots; i++) {
+    await sleep(intervalMs);
+    term.write('.');
+  }
+  term.writeln(' Done!');
 }
 
 export {c};

@@ -5,18 +5,12 @@ import {version} from '../../misc/constant';
 import {solverTierCmd} from './tier';
 import {player} from '../../playerData';
 import {solverIntroCmd} from './intro';
-
-export function solverTierUp(targetTier: number) {
-  if (player.accountTier >= targetTier) return;
-  player.accountTier = targetTier;
-
-  term.writeln(`Congratulations, you are now tier ${player.accountTier}!`);
-
-  switch (player.accountTier) {
-    case 1:
-      term.writeln("Subroutine 'fetch', 'submit' unlocked in command 'solver'");
-  }
-}
+import {
+  highestCaptchaTier,
+  printCurrentCaptcha,
+  requestNewCaptcha,
+  solveCaptcha,
+} from './captcha';
 
 const solverDesc = `${printCompany()} Command Line Interface, ver ${version}`;
 async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
@@ -29,10 +23,42 @@ async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
 
     if (player.accountTier >= 1) {
       if (argv[1] === 'fetch') {
-        term.writeln('TODO');
-        return 0;
+        if (player.curCaptcha !== '') {
+          term.writeln('Displaying pending task on local...');
+          printCurrentCaptcha();
+          return 0;
+        }
+
+        let tier = highestCaptchaTier();
+        if (argc >= 3) {
+          tier = parseInt(argv[2]);
+          if (isNaN(tier) || tier < 0 || tier > highestCaptchaTier()) {
+            term.writeln(
+              `Invalid tier! Available tiers are 0~${highestCaptchaTier()}`
+            );
+            return -1;
+          }
+        }
+
+        return await requestNewCaptcha(tier);
       } else if (argv[1] === 'submit') {
-        term.writeln('TODO');
+        if (player.curCaptcha === '') {
+          term.writeln("Error: You haven't fetched any captcha yet!");
+          return -1;
+        }
+
+        if (argc < 3) {
+          term.writeln('Error: You need to provide the answer!');
+          return -1;
+        }
+
+        return await solveCaptcha(argv[2]);
+      }
+    }
+
+    if (player.accountTier >= 2) {
+      if (argv[1] === 'library') {
+        term.writeln('TODO lol');
         return 0;
       }
     }
@@ -40,15 +66,19 @@ async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
 
   term.writeln(solverDesc);
   term.writeln('Usage:');
-  term.writeln(`${argv[0]} tier: Displays info about your account tier`);
+  term.writeln(`${argv[0]} tier: Display info about your account tier`);
   if (player.accountTier > 0) {
-    term.writeln(`${argv[0]} intro: Displays the introduction`);
+    term.writeln(`${argv[0]} intro: Display the introduction`);
     term.writeln(
-      `${argv[0]} fetch (tier): Fetches captcha from server or local`
+      `${argv[0]} fetch (tier): Fetche captcha from server or local`
     );
     term.writeln(
-      `${argv[0]} submit (answer): Submits answer to the current captcha`
+      `${argv[0]} submit (answer): Submit answer to the current captcha`
     );
+  }
+
+  if (player.accountTier > 1) {
+    term.writeln(`${argv[0]} library: Access ${printCompany()} library`);
   }
   term.writeln('');
   return 0;
