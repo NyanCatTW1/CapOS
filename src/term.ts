@@ -60,8 +60,6 @@ export async function lineInput(toPrint: string): Promise<string> {
   headerLen = curInput.length;
   cursorIndex = headerLen;
 
-  console.log(curInput);
-
   lineListening = true;
 
   await renderLine();
@@ -152,6 +150,12 @@ term.onKey(async e => {
       cursorIndex = headerLen;
     } else if (key === 'End') {
       cursorIndex = curInput.length;
+    } else if (key === 'c' && e.domEvent.ctrlKey) {
+      // Ctrl+C
+      term.write('\r\n');
+      curInput = curInput.splice(headerLen);
+      lineListening = false;
+      return;
     } else if (32 <= charCode && charCode <= 126) {
       // To avoid the scroll-up bug I can't fix
       if (curInput.length < 1024) {

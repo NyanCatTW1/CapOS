@@ -34,7 +34,9 @@ async function setupSystem() {
   term.writeln(`- ${printCompany()}`);
   term.writeln('');
 
-  player.username = await lineInput('Please enter your username: ');
+  while (player.username === '') {
+    player.username = await lineInput('Please enter your username: ');
+  }
   term.writeln(`Nice to meet you, ${printUsername()}!`);
   term.writeln('');
 
