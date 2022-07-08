@@ -6,6 +6,7 @@ import {isAlphanumeric} from './misc/termHelper';
 const term = new Terminal();
 
 export function setupTerm() {
+  term.options.fontFamily = 'Inconsolata';
   term.open(document.getElementById('terminal')!);
   term.focus();
 }
