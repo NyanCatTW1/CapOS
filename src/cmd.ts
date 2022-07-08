@@ -2,6 +2,7 @@ import {term, lineInput} from './term';
 import {printUsername, c} from './misc/termHelper';
 import {player} from './playerData';
 import {setupHelpCommand} from './commands/help';
+import {setupSolverCommand} from './commands/solver';
 
 // I really hope there is a way to make this DRYer...
 // https://github.com/Microsoft/TypeScript/issues/5326
@@ -43,6 +44,7 @@ function getPS() {
 
 export async function runCommandHandler() {
   setupHelpCommand();
+  setupSolverCommand();
 
   for (;;) {
     const cmd = await lineInput(getPS());
