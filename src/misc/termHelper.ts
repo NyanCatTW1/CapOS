@@ -30,8 +30,12 @@ export function printOS() {
   return c.blue(osName);
 }
 
-export function printCompany() {
-  return c.blue(companyName);
+export function printCompany(colored = true) {
+  if (colored) {
+    return c.blue(companyName);
+  } else {
+    return companyName;
+  }
 }
 
 export {c};

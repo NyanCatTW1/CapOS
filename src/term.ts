@@ -15,10 +15,10 @@ function getCursorLine() {
 }
 
 async function setCursorPos(targetX: number, targetY: number) {
+  // I have no idea how this works anymore.
   const viewportBottom = viewport + term.rows - 1;
 
   if (viewportBottom < targetY) {
-    console.log(`Scrolling down ${targetY - viewportBottom} lines`);
     term.scrollLines(targetY - viewportBottom);
     viewport = targetY - term.rows + 1;
   }
@@ -36,10 +36,32 @@ export async function lineInput(toPrint: string): Promise<string> {
   // Let the cursor position settle
   await sleep(0);
 
+  curInput = [];
+  let curBlock = '';
+  for (let i = 0; i < toPrint.length; ) {
+    // ESC
+    if (toPrint.charCodeAt(i) === 27) {
+      curBlock += toPrint.substring(i, i + 5);
+      i += 5;
+    } else {
+      curBlock += toPrint[i];
+      curInput.push(curBlock);
+      curBlock = '';
+      i += 1;
+    }
+  }
+
+  // This happens iff toPrint ends with an escape
+  if (curBlock !== '') {
+    curInput[curInput.length - 1] += curBlock;
+  }
+
   lineIndex = getCursorLine();
-  headerLen = toPrint.length;
+  headerLen = curInput.length;
   cursorIndex = headerLen;
-  curInput = toPrint.split('');
+
+  console.log(curInput);
+
   lineListening = true;
 
   await renderLine();
@@ -47,7 +69,7 @@ export async function lineInput(toPrint: string): Promise<string> {
     await sleep(10);
   }
 
-  return curInput.join('').substring(headerLen);
+  return curInput.slice(headerLen).join('');
 }
 
 async function renderLine() {
@@ -83,6 +105,7 @@ term.onKey(async e => {
       lineListening = false;
       return;
     } else if (charCode === 127) {
+      // Backspace
       if (cursorIndex !== headerLen) {
         curInput.splice(cursorIndex - 1, 1);
         cursorIndex -= 1;

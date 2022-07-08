@@ -53,7 +53,7 @@ export async function bootOS() {
   term.writeln('Starting ' + version);
   await sleep(600);
   term.writeln(
-    `smpboot: CPU0: ${printCompany()}(R) Core(TM) T3-Gen0 CPU @ 1KHz`
+    `smpboot: CPU0: ${printCompany(false)}(R) Core(TM) T3-Gen0 CPU @ 1KHz`
   );
   await sleep(200);
   term.writeln('r8169 0000:02:00.0 eth0: Link is Down');
