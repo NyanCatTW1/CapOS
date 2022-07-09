@@ -33,6 +33,7 @@ export async function solverIntroCmd(
     await lineInput('Press enter to complete the intro.');
     await dotLoadingBar({
       desc: `Marking intro as complete on ${printCompany()}`,
+      intervalMs: player.serverLatencyMs,
     });
     solverTierUp(1);
   }

@@ -40,7 +40,7 @@ export function printNextTierReq() {
       term.writeln('solve 5 T0 captchas');
       break;
     case 2:
-      term.writeln('solve 10000 T0 captchas');
+      term.writeln('reach strike 1000 on T0 captchas');
       break;
     case 3:
       term.writeln('urge Nyan cat to create new content');

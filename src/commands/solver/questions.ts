@@ -1,4 +1,9 @@
-import {printUsername, rotatingLoadingBar, c} from '../../misc/termHelper';
+import {
+  printUsername,
+  rotatingLoadingBar,
+  c,
+  printCompany,
+} from '../../misc/termHelper';
 import {player} from '../../playerData';
 import {term} from '../../term';
 import {addQuestion, Question} from './library';
@@ -62,6 +67,43 @@ export function addQuestions() {
 
         if (!player.libraryAskedQuestions.includes(1)) {
           player.libraryAskedQuestions.push(1);
+        }
+        return;
+      },
+    })
+  );
+
+  addQuestion(
+    new Question({
+      name: 'How do I speed up requests?',
+      id: 2,
+      isUnlocked: () => player.libraryAskedQuestions.includes(1),
+      onAsked: async () => {
+        term.writeln('There are two things that slow down requests:');
+        term.writeln('1. Your network connection');
+        term.writeln('2. Latency of the server');
+
+        term.writeln('');
+        term.writeln(
+          'You can upgrade your connection once you start earning trust with T1 captchas.'
+        );
+        term.writeln(
+          'However, you could immediately reduce the latency by running a hidden beta subroutine in the solver.'
+        );
+        term.writeln(
+          `Thanks to the annoying '${printCompany()} Beta Program NDA Filter,' I can only give out segments of the name. I'm sure you can figure it out.`
+        );
+        term.writeln('Selector');
+        term.writeln('Beta');
+        term.writeln('TheSolver');
+        term.writeln('auto');
+        term.writeln('Mirror');
+
+        term.writeln('');
+        term.writeln('Good luck.');
+
+        if (!player.libraryAskedQuestions.includes(2)) {
+          player.libraryAskedQuestions.push(2);
         }
         return;
       },

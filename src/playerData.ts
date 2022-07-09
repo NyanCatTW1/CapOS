@@ -8,10 +8,12 @@ export interface PlayerData {
   curCaptchaTier: number;
   curCaptchaAnswer: string;
   captchaSolves: number[];
+  captchaSolveStrikes: number[];
   libraryAskedQuestions: number[];
+  serverLatencyMs: number;
 }
 
-const latestSaveRevision = 5;
+const latestSaveRevision = 7;
 let player: PlayerData = {
   saveRevision: latestSaveRevision,
   username: '',
@@ -22,7 +24,9 @@ let player: PlayerData = {
   curCaptchaTier: -1,
   curCaptchaAnswer: '',
   captchaSolves: [0],
+  captchaSolveStrikes: [0],
   libraryAskedQuestions: [],
+  serverLatencyMs: 1000,
 };
 
 export function loadGame() {
@@ -50,6 +54,14 @@ export function loadGame() {
 
   if (player.saveRevision < 5) {
     player.libraryAskedQuestions = [];
+  }
+
+  if (player.saveRevision < 6) {
+    player.serverLatencyMs = 1000;
+  }
+
+  if (player.saveRevision < 7) {
+    player.captchaSolveStrikes = [0];
   }
 
   player.saveRevision = latestSaveRevision;

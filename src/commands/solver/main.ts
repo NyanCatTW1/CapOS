@@ -12,6 +12,7 @@ import {
   solveCaptcha,
 } from './captcha';
 import {solverLibraryCmd} from './library';
+import {solverMirrorSelectorCmd} from './mirrorSelector';
 
 const solverDesc = `${printCompany()} Command Line Interface, ver ${version}`;
 async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
@@ -59,9 +60,15 @@ async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
 
     if (player.accountTier >= 2) {
       if (argv[1] === 'library') {
-        await solverLibraryCmd();
-        return 0;
+        return await solverLibraryCmd();
       }
+    }
+
+    if (
+      player.libraryAskedQuestions.includes(2) &&
+      argv[1] === 'autoTheSolverMirrorSelectorBeta'
+    ) {
+      return await solverMirrorSelectorCmd();
     }
   }
 

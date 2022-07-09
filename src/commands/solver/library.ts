@@ -39,6 +39,7 @@ export async function solverLibraryCmd(): Promise<number> {
   await dotLoadingBar({
     desc: `Connecting to ${printCompany()} library`,
     dots: 10,
+    intervalMs: player.serverLatencyMs,
   });
 
   term.writeln(
@@ -77,9 +78,10 @@ export async function solverLibraryCmd(): Promise<number> {
 
     await dotLoadingBar({
       desc: 'Waiting for response',
-      dots: 3,
+      intervalMs: player.serverLatencyMs,
     });
 
+    term.writeln(c.bold('Start of response:'));
     const question = libQuestions[inp];
     if (question instanceof Question && question.isUnlocked()) {
       await question.onAsked();

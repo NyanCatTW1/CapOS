@@ -1,3 +1,4 @@
+import {randint} from '../../misc/randHelper';
 import {dotLoadingBar, printCompany} from '../../misc/termHelper';
 import {player} from '../../playerData';
 import {term} from '../../term';
@@ -24,10 +25,6 @@ export function printCurrentCaptcha() {
   term.writeln(player.curCaptcha);
 }
 
-function randint(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-}
-
 function setNewCaptcha(tier: number) {
   player.curCaptchaTier = tier;
   if (tier === 0) {
@@ -41,6 +38,7 @@ function setNewCaptcha(tier: number) {
 export async function requestNewCaptcha(tier: number): Promise<number> {
   await dotLoadingBar({
     desc: `Requesting T${tier} captcha from ${printCompany()}`,
+    intervalMs: player.serverLatencyMs,
   });
 
   setNewCaptcha(tier);
@@ -51,6 +49,7 @@ export async function requestNewCaptcha(tier: number): Promise<number> {
 export async function solveCaptcha(answer: string): Promise<number> {
   await dotLoadingBar({
     desc: `Submitting answer to ${printCompany()}`,
+    intervalMs: player.serverLatencyMs,
   });
 
   player.curCaptcha = '';
@@ -58,22 +57,31 @@ export async function solveCaptcha(answer: string): Promise<number> {
   if (player.curCaptchaAnswer === answer) {
     const tier = player.curCaptchaTier;
     player.captchaSolves[tier] += 1;
+    player.captchaSolveStrikes[tier] += 1;
 
     term.writeln('Correct answer! :tada:');
     term.writeln(
       `You have solved ${player.captchaSolves[tier]} T${tier} captchas.`
     );
 
+    if (player.captchaSolveStrikes[tier] >= 3) {
+      term.writeln(
+        `You're on a strike of ${player.captchaSolveStrikes[tier]} solves! Keep it rolling!`
+      );
+    }
+
     if (player.captchaSolves[0] >= 5) {
       solverTierUp(2);
     }
 
-    if (player.captchaSolves[0] >= 10000) {
+    if (player.captchaSolveStrikes[0] >= 1000) {
       solverTierUp(3);
     }
   } else {
+    player.captchaSolveStrikes[player.curCaptchaTier] = 0;
     term.writeln('Invalid answer! :oof:');
-    term.writeln('No penalty was issued.');
+    term.writeln('Solve strike has been reset.');
+    term.writeln('No other penalty was issued.');
     term.writeln('To continue solving, fetch a new task.');
   }
 

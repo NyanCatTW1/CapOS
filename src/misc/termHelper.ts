@@ -44,17 +44,19 @@ export async function dotLoadingBar({
   desc,
   dots = 5,
   intervalMs = 1000,
+  onFinish = 'Done!',
 }: {
   desc: string;
   dots?: number;
   intervalMs?: number;
+  onFinish?: string;
 }) {
   term.write(desc);
   for (let i = 0; i < dots; i++) {
     await sleep(intervalMs);
     term.write('.');
   }
-  term.writeln(' Done!');
+  term.writeln(' ' + onFinish);
 }
 
 export async function rotatingLoadingBar({

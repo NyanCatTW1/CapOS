@@ -47,6 +47,7 @@ async function setupSystem() {
 
   await dotLoadingBar({
     desc: `Registering ${printUsername()} on ${printCompany()}`,
+    intervalMs: player.serverLatencyMs,
   });
   term.writeln('');
 
