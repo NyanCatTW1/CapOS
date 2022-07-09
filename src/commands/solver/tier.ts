@@ -10,8 +10,8 @@ const tierNames = [
   'Experienced Scripter',
 ];
 
-function printTier(tier: number): string {
-  return c.bold(`${tier} (${tierNames[tier]})`);
+export function printTier(tier: number): string {
+  return c.bold(`Tier ${tier} (${tierNames[tier]})`);
 }
 
 export function solverTierUp(targetTier: number) {
@@ -19,7 +19,7 @@ export function solverTierUp(targetTier: number) {
   player.accountTier = targetTier;
 
   term.writeln(
-    `Congratulations, you are now tier ${printTier(player.accountTier)}!`
+    `Congratulations, you are now ${printTier(player.accountTier)}!`
   );
 
   switch (player.accountTier) {
@@ -34,7 +34,7 @@ export function solverTierUp(targetTier: number) {
 }
 
 export function printNextTierReq() {
-  term.write(`In order to reach tier ${printTier(player.accountTier + 1)}, `);
+  term.write(`In order to reach ${printTier(player.accountTier + 1)}, `);
   switch (player.accountTier) {
     case 0:
       term.writeln("read the introduction by running 'solver intro'");
@@ -43,7 +43,7 @@ export function printNextTierReq() {
       term.writeln('solve 5 T0 captchas');
       break;
     case 2:
-      term.writeln('reach strike 1000 on T0 captchas');
+      term.writeln('solve 100 T0 captchas');
       break;
     case 3:
       term.writeln('urge Nyan cat to create new content');
@@ -53,9 +53,9 @@ export function printNextTierReq() {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function solverTierCmd(_argc: number, _argv: string[]): number {
-  term.writeln(`You are currently tier ${printTier(player.accountTier)}`);
+  term.writeln(`You are currently ${printTier(player.accountTier)}`);
   term.writeln(
-    'Higher tier unlocks access to harder captchas and advanced features throughout the system.'
+    'Higher Tier unlocks access to harder captchas and advanced features throughout the system.'
   );
 
   printNextTierReq();

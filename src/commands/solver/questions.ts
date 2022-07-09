@@ -42,20 +42,20 @@ export function addQuestions() {
 
   addQuestion(
     new Question({
-      name: 'Why does it take so many solves to reach tier 3?',
+      name: "Why can't I manually reach tier 3?",
       id: 1,
       isUnlocked: () => player.libraryAskedQuestions.includes(0),
       onAsked: async () => {
         term.writeln(
-          `Good question, ${printUsername()}! You're not the first person wondering that. In fact, 83.48% of Tier 2 users asked this question right after their first question.`
+          `Good question, ${printUsername()}! You're not the first person wondering that. In fact, 99.48% of Tier 2 users asked this question right after their first question.`
         );
         term.writeln(
           c.bold(
-            "We made the requirement high to filter out those who don't sharpen their saws."
+            'We made this requirement to filter out those not willing to improve themselves.'
           )
         );
         term.writeln(
-          "Don't you want to make that 5-second delay between requests shorter? Or maybe something that helps you solve the equation?"
+          "While solving those 5 T0 captchas, didn't you want to get the 5-second delay between requests shorter? Or maybe get something that helps you solve the equation?"
         );
         term.writeln(
           'Screw it. Why not just automate the solving process entirely? It is explicitly allowed on the seventh page of the contract.'
@@ -63,7 +63,7 @@ export function addQuestions() {
         term.writeln(
           "We don't want people who just grind their way to the end. Instead, we want people who know how to reduce their work or even remove the work from themselves."
         );
-        term.writeln('And that is why we made the requirement high.');
+        term.writeln('And that is why we created this requirement.');
 
         if (!player.libraryAskedQuestions.includes(1)) {
           player.libraryAskedQuestions.push(1);
@@ -244,6 +244,81 @@ export function addQuestions() {
 
         if (!player.libraryAskedQuestions.includes(5)) {
           player.libraryAskedQuestions.push(5);
+        }
+        return;
+      },
+    })
+  );
+
+  addQuestion(
+    new Question({
+      name: 'How do I use theSolvers module?',
+      id: 6,
+      isUnlocked: () => player.scriptStepsTried['autoT0.py'].includes(0),
+      onAsked: async () => {
+        term.writeln("First of all, type 'import theSolvers'. Afterwards...");
+
+        const learningSteps = [
+          'Learning the concept of functions...',
+          'Learning how to pass arguments to functions...',
+          'Learning how modules work in Python...',
+          'Learning how to fetch T0 tasks with theSolvers...',
+          'Learning how to submit answer with theSolvers...',
+        ];
+
+        for (let i = 0; i < learningSteps.length; i += 1) {
+          await rotatingLoadingBar({desc: learningSteps[i], intervalMs: 500});
+        }
+
+        term.writeln(
+          "And that's about it really. Solving the captcha is the fun part, after all."
+        );
+
+        if (!player.libraryAskedQuestions.includes(6)) {
+          player.libraryAskedQuestions.push(6);
+        }
+        return;
+      },
+    })
+  );
+
+  addQuestion(
+    new Question({
+      name: 'How do I make a code repeat itself?',
+      id: 7,
+      isUnlocked: () => player.scriptStepsTried['autoT0.py'].includes(8),
+      onAsked: async () => {
+        term.writeln(
+          "In case you wanna let it run forever, just put all of the code inside a 'while True:' loop."
+        );
+        term.writeln(
+          "Wait, you don't know how indentations work? Okay, this is hopefully an easy part..."
+        );
+
+        const learningSteps = [
+          'Learning the basics of indentations...',
+          'Learning the difference between spaces and tabs...',
+          'Choosing between 2 spaces, 4 spaces and tabs...',
+          'Learning the basics of program flow...',
+          "'Wait, the flow could go back to previous lines of code?'",
+          'Memorizing that while True repeats the code forever...',
+          'Learning how indentations affect the range of loops...',
+        ];
+
+        for (let i = 0; i < learningSteps.length; i += 1) {
+          await rotatingLoadingBar({desc: learningSteps[i], intervalMs: 500});
+        }
+
+        term.writeln('That was not an easy part.');
+
+        term.writeln(
+          `Oh yeah. Once you want to break the loop, ${c.bold(
+            'pressing Ctrl+C'
+          )} should stop the script. If that doesn't work, spam Ctrl+C.`
+        );
+
+        if (!player.libraryAskedQuestions.includes(7)) {
+          player.libraryAskedQuestions.push(7);
         }
         return;
       },

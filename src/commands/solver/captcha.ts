@@ -1,8 +1,8 @@
 import {randint} from '../../misc/randHelper';
-import {dotLoadingBar, printCompany} from '../../misc/termHelper';
+import {c, dotLoadingBar, printCompany} from '../../misc/termHelper';
 import {player} from '../../playerData';
 import {term} from '../../term';
-import {solverTierUp} from './tier';
+import {solverTierUp, printTier} from './tier';
 
 export function highestCaptchaTier() {
   let ret = -1;
@@ -14,7 +14,7 @@ export function highestCaptchaTier() {
 }
 
 const tierNames = ['T0 (Training captcha)'];
-const tierRewards = ['None (Training captcha)'];
+const tierRewards = ['None'];
 const tierPenalties = ['None'];
 
 export function printCurrentCaptcha() {
@@ -36,14 +36,52 @@ function setNewCaptcha(tier: number) {
   }
 }
 
-export async function requestNewCaptcha(tier: number): Promise<number> {
-  await dotLoadingBar({
-    desc: `Requesting ${tierNames[tier]} captcha from ${printCompany()}`,
-    intervalMs: player.serverLatencyMs,
-  });
+export async function requestNewCaptcha(
+  tier: number,
+  auto = false
+): Promise<number> {
+  if (player.curCaptcha !== '') {
+    if (player.curCaptchaTier === tier) {
+      term.writeln('Notice: Task with the same tier already exists on local');
+      return 0;
+    } else {
+      term.writeln(
+        `${c.red('Error:')} Task with a different tier already exists on local`
+      );
+      return -1;
+    }
+  }
+
+  if (
+    !(await dotLoadingBar({
+      desc: `Requesting ${tierNames[tier]} captcha from ${printCompany()}`,
+      intervalMs: player.serverLatencyMs,
+      interruptible: true,
+    }))
+  )
+    return -1;
+
+  if (tier === 0 && player.accountTier !== 1 && !auto) {
+    term.writeln(
+      `${c.red(
+        'Access denied'
+      )}: Manual T0 Captchas are only available to ${printTier(1)} users.`
+    );
+    return -1;
+  }
+
+  if (tier === 0 && player.accountTier !== 2 && auto) {
+    term.writeln(
+      `${c.red(
+        'Access denied'
+      )}: Auto T0 Captchas are only available to ${printTier(2)} users.`
+    );
+    return -1;
+  }
 
   setNewCaptcha(tier);
-  printCurrentCaptcha();
+  if (!auto) printCurrentCaptcha();
+  else term.writeln(player.curCaptcha);
   return 0;
 }
 
@@ -75,7 +113,7 @@ export async function solveCaptcha(answer: string): Promise<number> {
       solverTierUp(2);
     }
 
-    if (player.captchaSolveStrikes[0] >= 1000) {
+    if (player.captchaSolves[0] >= 100) {
       solverTierUp(3);
     }
   } else {

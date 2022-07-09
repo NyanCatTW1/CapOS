@@ -1,4 +1,5 @@
 import {
+  c,
   dotLoadingBar,
   printCompany,
   printUsername,
@@ -15,13 +16,21 @@ export async function solverIntroCmd(
     `Hello, ${printUsername()}! Let's not waste your time here and get straight to the point.`
   );
   term.writeln(
-    `To fetch a new captcha with highest tier, run '${argv[0]} fetch'. You can also run '${argv[0]} fetch (tier)' if you wish to fetch an easier one.`
+    `To fetch a new captcha with highest tier, run ${c.bold(
+      argv[0] + ' fetch'
+    )}. You can also run ${c.bold(
+      argv[0] + ' fetch (tier)'
+    )} if you wish to fetch an easier one.`
   );
   term.writeln(
-    `In case you forgot the captcha later, rerun '${argv[0]} fetch' to display it.`
+    `In case you forget the captcha later, rerun ${c.bold(
+      argv[0] + ' fetch'
+    )} to display it.`
   );
   term.writeln(
-    `After finding the solution, run '${argv[0]} submit (answer)' to submit the answer.`
+    `After finding the solution, run ${c.bold(
+      argv[0] + ' submit (answer)'
+    )} to submit the answer.`
   );
   term.writeln(
     'If the answer is valid, you will get your rewards. In case you got it wrong though...you might get punished depending on the captcha tier.'

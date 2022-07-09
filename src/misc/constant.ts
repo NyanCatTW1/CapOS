@@ -1,4 +1,4 @@
-const version = '0.0.0';
+const version = '0.0.1';
 const osName = 'CapOS';
 const companyName = 'The Solvers';
 const upperChars = 'ABCDEFGHIJKLMNOPQRSTUVXYZ';

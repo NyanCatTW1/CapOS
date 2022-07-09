@@ -5,6 +5,8 @@ import {setupHelpCommand} from './commands/help';
 import {setupSolverCommand} from './commands/solver/solverMain';
 import {setupPythonCommand} from './commands/python';
 import {setupVimCommand} from './commands/vim';
+import {setupLsCommand} from './commands/ls';
+import {setupCatCommand} from './commands/cat';
 
 // I really hope there is a way to make this DRYer...
 // https://github.com/Microsoft/TypeScript/issues/5326
@@ -50,6 +52,8 @@ function getPS() {
 
 export async function runCommandHandler() {
   setupHelpCommand();
+  setupLsCommand();
+  setupCatCommand();
   setupSolverCommand();
   setupPythonCommand();
   setupVimCommand();

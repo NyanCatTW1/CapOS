@@ -1,7 +1,7 @@
 import {addCommand, Command} from '../cmd';
 import {term} from '../term';
 import {player} from '../playerData';
-import {PyScript, scripts} from '../scripts/scriptMain';
+import {canTryWriteScript, PyScript, scripts} from '../scripts/scriptMain';
 
 async function pythonCmdHandler(argc: number, argv: string[]): Promise<number> {
   if (argc < 2) {
@@ -15,7 +15,13 @@ async function pythonCmdHandler(argc: number, argv: string[]): Promise<number> {
     player.scriptStepsWrote[argv[1]].length !== 0
   ) {
     if (curScript.isRunnable()) {
-      return await curScript.onRun(argc - 1, argv.slice(1));
+      const retCode = await curScript.onRun(argc - 1, argv.slice(1));
+      if (canTryWriteScript(curScript)) {
+        term.writeln(
+          'Tip: There are improvements you could try to make to the script with vim.'
+        );
+      }
+      return retCode;
     } else {
       term.writeln('');
       term.writeln(

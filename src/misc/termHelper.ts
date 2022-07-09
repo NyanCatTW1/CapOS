@@ -62,7 +62,7 @@ export async function dotLoadingBar({
     await sleep(intervalMs);
     if (interruptible && interruptFlag) {
       term.writeln('');
-      break;
+      return false;
     }
     term.write('.');
   }

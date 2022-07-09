@@ -85,6 +85,7 @@ export async function solverLibraryCmd(): Promise<number> {
     const question = libQuestions[inp];
     if (question instanceof Question && question.isUnlocked()) {
       await question.onAsked();
+      await lineInput('Press enter to continue...');
     } else {
       term.writeln(
         "I'm not sure what you meant. Maybe you made a typo in your question?"

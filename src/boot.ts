@@ -10,15 +10,24 @@ import {
 import {player} from './playerData';
 
 async function setupSystem() {
-  term.writeln(`Setting up ${printOS()} for the first time...`);
-  await sleep(1000);
-  term.writeln('Activating serial code [RW9MG-QR4G3-2WRR9-TG7BH-33GXB]...');
-  await sleep(1000);
-  term.writeln('Serial activated!');
+  await dotLoadingBar({
+    desc: `Setting up ${printOS()} for the first time`,
+    dots: 5,
+    intervalMs: 400,
+    onFinish: '',
+  });
 
-  await sleep(500);
-  term.writeln('Starting OOBE...');
-  await sleep(1000);
+  await dotLoadingBar({
+    desc: 'Activating serial code [RW9MG-QR4G3-2WRR9-TG7BH-33GXB]',
+    onFinish: 'Serial activated!',
+  });
+
+  await dotLoadingBar({
+    desc: 'Starting OOBE',
+    dots: 10,
+    intervalMs: 400,
+    onFinish: '',
+  });
 
   term.clear();
   term.writeln(
