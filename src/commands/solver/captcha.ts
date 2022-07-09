@@ -13,12 +13,13 @@ export function highestCaptchaTier() {
   return ret;
 }
 
+const tierNames = ['T0 (Training captcha)'];
 const tierRewards = ['None (Training captcha)'];
 const tierPenalties = ['None'];
 
 export function printCurrentCaptcha() {
   const tier = player.curCaptchaTier;
-  term.writeln(`Difficulty: T${tier}`);
+  term.writeln(`Difficulty: ${tierNames[tier]}`);
   term.writeln(`Solve reward: ${tierRewards[tier]}`);
   term.writeln(`Fail penalty: ${tierPenalties[tier]}`);
   term.writeln('');
@@ -37,7 +38,7 @@ function setNewCaptcha(tier: number) {
 
 export async function requestNewCaptcha(tier: number): Promise<number> {
   await dotLoadingBar({
-    desc: `Requesting T${tier} captcha from ${printCompany()}`,
+    desc: `Requesting ${tierNames[tier]} captcha from ${printCompany()}`,
     intervalMs: player.serverLatencyMs,
   });
 
@@ -61,7 +62,7 @@ export async function solveCaptcha(answer: string): Promise<number> {
 
     term.writeln('Correct answer! :tada:');
     term.writeln(
-      `You have solved ${player.captchaSolves[tier]} T${tier} captchas.`
+      `You have solved ${player.captchaSolves[tier]} ${tierNames[tier]} captchas.`
     );
 
     if (player.captchaSolveStrikes[tier] >= 3) {

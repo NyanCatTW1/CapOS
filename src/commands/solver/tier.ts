@@ -1,3 +1,4 @@
+import {c} from '../../misc/termHelper';
 import {player} from '../../playerData';
 import {term} from '../../term';
 
@@ -10,14 +11,16 @@ const tierNames = [
 ];
 
 function printTier(tier: number): string {
-  return `${tier} (${tierNames[tier]})`;
+  return c.bold(`${tier} (${tierNames[tier]})`);
 }
 
 export function solverTierUp(targetTier: number) {
   if (player.accountTier >= targetTier) return;
   player.accountTier = targetTier;
 
-  term.writeln(`Congratulations, you are now tier ${player.accountTier}!`);
+  term.writeln(
+    `Congratulations, you are now tier ${printTier(player.accountTier)}!`
+  );
 
   switch (player.accountTier) {
     case 1:

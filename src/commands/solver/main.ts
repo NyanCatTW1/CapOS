@@ -95,6 +95,7 @@ export function setupSolverCommand() {
     new Command({
       name: 'solver',
       desc: solverDesc,
+      isUnlocked: () => true,
       cmdHandler: solverCmdHandler,
     })
   );

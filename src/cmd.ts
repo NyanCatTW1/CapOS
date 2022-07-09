@@ -3,25 +3,31 @@ import {printUsername, c} from './misc/termHelper';
 import {player} from './playerData';
 import {setupHelpCommand} from './commands/help';
 import {setupSolverCommand} from './commands/solver/main';
+import {setupPythonCommand} from './commands/python/main';
+import {setupVimCommand} from './commands/vim/main';
 
 // I really hope there is a way to make this DRYer...
 // https://github.com/Microsoft/TypeScript/issues/5326
 export class Command {
   name: string;
   desc: string;
+  isUnlocked: () => boolean;
   cmdHandler: (argc: number, argv: string[]) => Promise<number>;
 
   constructor({
     name,
     desc,
+    isUnlocked,
     cmdHandler,
   }: {
     name: string;
     desc: string;
+    isUnlocked: () => boolean;
     cmdHandler: (argc: number, argv: string[]) => Promise<number>;
   }) {
     this.name = name;
     this.desc = desc;
+    this.isUnlocked = isUnlocked;
     this.cmdHandler = cmdHandler;
   }
 }
@@ -45,6 +51,8 @@ function getPS() {
 export async function runCommandHandler() {
   setupHelpCommand();
   setupSolverCommand();
+  setupPythonCommand();
+  setupVimCommand();
 
   for (;;) {
     const cmd = await lineInput(getPS());
@@ -57,7 +65,7 @@ export async function runCommandHandler() {
       continue;
     }
 
-    if (cmds[cmdName] instanceof Command) {
+    if (cmds[cmdName] instanceof Command && cmds[cmdName].isUnlocked()) {
       await cmds[cmdName].cmdHandler(argc, argv);
     } else {
       term.writeln('csh: command not found: ' + cmdName);

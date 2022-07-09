@@ -6,10 +6,13 @@ export function setupHelpCommand() {
     new Command({
       name: 'help',
       desc: 'List all commands and their purposes',
+      isUnlocked: () => true,
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       cmdHandler: async (_argc: number, _argv: string[]) => {
         Object.keys(cmds).forEach(cmdName => {
-          term.writeln(`${cmdName}: ${cmds[cmdName].desc}`);
+          if (cmds[cmdName].isUnlocked()) {
+            term.writeln(`${cmdName}: ${cmds[cmdName].desc}`);
+          }
         });
 
         return 0;

@@ -11,14 +11,15 @@ export interface PlayerData {
   captchaSolveStrikes: number[];
   libraryAskedQuestions: number[];
   serverLatencyMs: number;
+  scriptsWrote: string[];
 }
 
-const latestSaveRevision = 7;
+const latestSaveRevision = 10;
 let player: PlayerData = {
   saveRevision: latestSaveRevision,
   username: '',
   systemSetup: false,
-  path: '/',
+  path: '~',
   accountTier: 0,
   curCaptcha: '',
   curCaptchaTier: -1,
@@ -27,6 +28,7 @@ let player: PlayerData = {
   captchaSolveStrikes: [0],
   libraryAskedQuestions: [],
   serverLatencyMs: 1000,
+  scriptsWrote: [],
 };
 
 export function loadGame() {
@@ -35,10 +37,6 @@ export function loadGame() {
   }
 
   player = JSON.parse(localStorage.getItem('CapOS')!);
-
-  if (player.saveRevision < 1) {
-    player.path = '/';
-  }
 
   if (player.saveRevision < 2) {
     player.accountTier = 0;
@@ -62,6 +60,14 @@ export function loadGame() {
 
   if (player.saveRevision < 7) {
     player.captchaSolveStrikes = [0];
+  }
+
+  if (player.saveRevision < 8) {
+    player.path = '~';
+  }
+
+  if (player.saveRevision < 9) {
+    player.scriptsWrote = [];
   }
 
   player.saveRevision = latestSaveRevision;
