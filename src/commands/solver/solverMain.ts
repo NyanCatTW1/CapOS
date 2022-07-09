@@ -64,10 +64,8 @@ async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
       }
     }
 
-    if (
-      player.libraryAskedQuestions.includes(2) &&
-      argv[1] === 'autoTheSolverMirrorSelectorBeta'
-    ) {
+    // Do not check story progress to make way for speedrunners
+    if (argv[1] === 'autoTheSolverMirrorSelectorBeta') {
       return await solverMirrorSelectorCmd();
     }
   }

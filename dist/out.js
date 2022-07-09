@@ -8717,7 +8717,7 @@
             return yield solverLibraryCmd();
           }
         }
-        if (player.libraryAskedQuestions.includes(2) && argv[1] === "autoTheSolverMirrorSelectorBeta") {
+        if (argv[1] === "autoTheSolverMirrorSelectorBeta") {
           return yield solverMirrorSelectorCmd();
         }
       }
