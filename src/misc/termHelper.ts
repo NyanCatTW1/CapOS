@@ -57,4 +57,23 @@ export async function dotLoadingBar({
   term.writeln(' Done!');
 }
 
+export async function rotatingLoadingBar({
+  desc,
+  rotations = 12,
+  intervalMs = 250,
+}: {
+  desc: string;
+  rotations?: number;
+  intervalMs?: number;
+}) {
+  const rotSymbols = ['-', '\\', '|', '/'];
+  for (let i = 0; i < rotations; i += 1) {
+    term.write('\r');
+    term.write(`[${rotSymbols[i % 4]}] ${desc}`);
+    await sleep(intervalMs);
+  }
+
+  term.writeln(' Done!');
+}
+
 export {c};

@@ -4,7 +4,7 @@ import {term} from '../../term';
 const tierNames = [
   'Total newbie',
   'Newbie',
-  'Tryhard',
+  'Student',
   'Novice Scripter',
   'Experienced Scripter',
 ];

@@ -8,9 +8,10 @@ export interface PlayerData {
   curCaptchaTier: number;
   curCaptchaAnswer: string;
   captchaSolves: number[];
+  libraryAskedQuestions: number[];
 }
 
-const latestSaveRevision = 4;
+const latestSaveRevision = 5;
 let player: PlayerData = {
   saveRevision: latestSaveRevision,
   username: '',
@@ -21,6 +22,7 @@ let player: PlayerData = {
   curCaptchaTier: -1,
   curCaptchaAnswer: '',
   captchaSolves: [0],
+  libraryAskedQuestions: [],
 };
 
 export function loadGame() {
@@ -44,6 +46,10 @@ export function loadGame() {
 
   if (player.saveRevision < 4) {
     player.captchaSolves = [0];
+  }
+
+  if (player.saveRevision < 5) {
+    player.libraryAskedQuestions = [];
   }
 
   player.saveRevision = latestSaveRevision;

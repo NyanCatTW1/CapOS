@@ -11,6 +11,7 @@ import {
   requestNewCaptcha,
   solveCaptcha,
 } from './captcha';
+import {solverLibraryCmd} from './library';
 
 const solverDesc = `${printCompany()} Command Line Interface, ver ${version}`;
 async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
@@ -58,7 +59,7 @@ async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
 
     if (player.accountTier >= 2) {
       if (argv[1] === 'library') {
-        term.writeln('TODO lol');
+        await solverLibraryCmd();
         return 0;
       }
     }
@@ -69,9 +70,7 @@ async function solverCmdHandler(argc: number, argv: string[]): Promise<number> {
   term.writeln(`${argv[0]} tier: Display info about your account tier`);
   if (player.accountTier > 0) {
     term.writeln(`${argv[0]} intro: Display the introduction`);
-    term.writeln(
-      `${argv[0]} fetch (tier): Fetche captcha from server or local`
-    );
+    term.writeln(`${argv[0]} fetch (tier): Fetch captcha from server or local`);
     term.writeln(
       `${argv[0]} submit (answer): Submit answer to the current captcha`
     );

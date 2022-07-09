@@ -2,13 +2,23 @@ import {Terminal} from 'xterm';
 import {sleep} from './misc/asyncHelper';
 import ansiEscapes from 'ansi-escapes';
 import {isAlphanumeric} from './misc/termHelper';
+const FontFaceObserver = require('fontfaceobserver');
 
-const term = new Terminal();
+const term = new Terminal({fontFamily: 'Inconsolata'});
 
 export function setupTerm() {
-  term.options.fontFamily = 'Inconsolata';
-  term.open(document.getElementById('terminal')!);
-  term.focus();
+  const regularFont = new FontFaceObserver('Inconsolata', {
+    weight: 400,
+  });
+  const boldFont = new FontFaceObserver('Inconsolata', {
+    weight: 700,
+  });
+
+  Promise.all([regularFont.load(), boldFont.load()]).then(() => {
+    term.open(document.getElementById('terminal')!);
+    term.onKey(handleTermKey);
+    term.focus();
+  });
 }
 
 function getCursorLine() {
@@ -91,7 +101,7 @@ async function renderLine() {
 }
 
 // TODO: Implement human-friendly copypasting
-term.onKey(async e => {
+async function handleTermKey(e: {key: string; domEvent: KeyboardEvent}) {
   const key = e.domEvent.key;
   const charCode = e.key.charCodeAt(0);
   if (key === 'F5') {
@@ -169,6 +179,6 @@ term.onKey(async e => {
 
     await renderLine();
   }
-});
+}
 
 export {term};
