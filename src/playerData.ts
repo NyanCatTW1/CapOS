@@ -11,10 +11,12 @@ export interface PlayerData {
   captchaSolveStrikes: number[];
   libraryAskedQuestions: number[];
   serverLatencyMs: number;
-  scriptsWrote: string[];
+  scriptsWrote?: string[];
+  scriptStepsWrote: {[key: string]: number[]};
+  scriptStepsTried: {[key: string]: number[]};
 }
 
-const latestSaveRevision = 10;
+const latestSaveRevision = 13;
 let player: PlayerData = {
   saveRevision: latestSaveRevision,
   username: '',
@@ -28,7 +30,8 @@ let player: PlayerData = {
   captchaSolveStrikes: [0],
   libraryAskedQuestions: [],
   serverLatencyMs: 1000,
-  scriptsWrote: [],
+  scriptStepsWrote: {},
+  scriptStepsTried: {},
 };
 
 export function loadGame() {
@@ -66,8 +69,16 @@ export function loadGame() {
     player.path = '~';
   }
 
-  if (player.saveRevision < 9) {
-    player.scriptsWrote = [];
+  if (player.saveRevision === 9) {
+    delete player.scriptsWrote;
+  }
+
+  if (player.saveRevision < 12) {
+    player.scriptStepsWrote = {};
+  }
+
+  if (player.saveRevision < 13) {
+    player.scriptStepsTried = {};
   }
 
   player.saveRevision = latestSaveRevision;

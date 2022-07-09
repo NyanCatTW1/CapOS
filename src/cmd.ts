@@ -2,9 +2,9 @@ import {term, lineInput} from './term';
 import {printUsername, c} from './misc/termHelper';
 import {player} from './playerData';
 import {setupHelpCommand} from './commands/help';
-import {setupSolverCommand} from './commands/solver/main';
-import {setupPythonCommand} from './commands/python/main';
-import {setupVimCommand} from './commands/vim/main';
+import {setupSolverCommand} from './commands/solver/solverMain';
+import {setupPythonCommand} from './commands/python';
+import {setupVimCommand} from './commands/vim';
 
 // I really hope there is a way to make this DRYer...
 // https://github.com/Microsoft/TypeScript/issues/5326

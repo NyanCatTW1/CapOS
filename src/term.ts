@@ -43,6 +43,12 @@ let lineIndex: number;
 let headerLen: number;
 let curInput: string[];
 let lineListening: boolean;
+export let interruptFlag = true;
+
+export function setInterruptFlag(to: boolean) {
+  interruptFlag = to;
+}
+
 export async function lineInput(toPrint: string): Promise<string> {
   // Let the cursor position settle
   await sleep(0);
@@ -110,7 +116,7 @@ async function handleTermKey(e: {key: string; domEvent: KeyboardEvent}) {
 
   if (lineListening) {
     if (e.key === '\r') {
-      term.write('\r\n');
+      term.writeln('');
       lineListening = false;
       return;
     } else if (charCode === 127) {
@@ -163,7 +169,7 @@ async function handleTermKey(e: {key: string; domEvent: KeyboardEvent}) {
       cursorIndex = curInput.length;
     } else if (key === 'c' && e.domEvent.ctrlKey) {
       // Ctrl+C
-      term.write('\r\n');
+      term.writeln('');
       curInput = curInput.splice(headerLen);
       lineListening = false;
       return;
@@ -178,6 +184,11 @@ async function handleTermKey(e: {key: string; domEvent: KeyboardEvent}) {
     }
 
     await renderLine();
+  } else if (key === 'c' && e.domEvent.ctrlKey) {
+    // Ctrl+C
+    if (!interruptFlag) {
+      interruptFlag = true;
+    }
   }
 }
 

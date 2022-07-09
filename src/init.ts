@@ -3,7 +3,7 @@ import {bootOS} from './boot';
 import {setVersionInTitle} from './misc/constant';
 import {loadGame, saveGame} from './playerData';
 import {runCommandHandler} from './cmd';
-import {setupScripts} from './scripts/main';
+import {setupScripts} from './scripts/scriptMain';
 
 window.addEventListener('load', async () => {
   setupTerm();
