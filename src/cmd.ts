@@ -50,6 +50,23 @@ function getPS() {
   );
 }
 
+export let cmdHistoryPtr = -1;
+
+export function moveCmdHistoryPtr(delta: number): boolean {
+  const oldPtr = cmdHistoryPtr;
+  cmdHistoryPtr = Math.min(
+    Math.max(0, cmdHistoryPtr + delta),
+    player.cmdHistory.length
+  );
+
+  return oldPtr !== cmdHistoryPtr;
+}
+
+export function getCurCmdHistory(): string {
+  if (cmdHistoryPtr >= player.cmdHistory.length) return '';
+  return player.cmdHistory[cmdHistoryPtr];
+}
+
 export async function runCommandHandler() {
   setupHelpCommand();
   setupLsCommand();
@@ -59,7 +76,10 @@ export async function runCommandHandler() {
   setupVimCommand();
 
   for (;;) {
+    cmdHistoryPtr = player.cmdHistory.length;
     const cmd = await lineInput(getPS());
+    cmdHistoryPtr = -1;
+
     // https://stackoverflow.com/a/1981366
     const argv = cmd.trim().replace(/  +/g, ' ').split(' ');
     const argc = argv.length;
@@ -67,6 +87,11 @@ export async function runCommandHandler() {
     if (cmdName === '') {
       // No command fed
       continue;
+    }
+
+    player.cmdHistory.push(cmd);
+    while (player.cmdHistory.length > 1000) {
+      player.cmdHistory.shift();
     }
 
     if (cmds[cmdName] instanceof Command && cmds[cmdName].isUnlocked()) {

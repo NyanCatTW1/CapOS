@@ -14,9 +14,10 @@ export interface PlayerData {
   scriptsWrote?: string[];
   scriptStepsWrote: {[key: string]: number[]};
   scriptStepsTried: {[key: string]: number[]};
+  cmdHistory: string[];
 }
 
-const latestSaveRevision = 13;
+const latestSaveRevision = 14;
 let player: PlayerData = {
   saveRevision: latestSaveRevision,
   username: '',
@@ -32,6 +33,7 @@ let player: PlayerData = {
   serverLatencyMs: 1000,
   scriptStepsWrote: {},
   scriptStepsTried: {},
+  cmdHistory: [],
 };
 
 export function loadGame() {
@@ -79,6 +81,10 @@ export function loadGame() {
 
   if (player.saveRevision < 13) {
     player.scriptStepsTried = {};
+  }
+
+  if (player.saveRevision < 14) {
+    player.cmdHistory = [];
   }
 
   player.saveRevision = latestSaveRevision;

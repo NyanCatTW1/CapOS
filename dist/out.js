@@ -7361,6 +7361,9 @@
     if (player.saveRevision < 13) {
       player.scriptStepsTried = {};
     }
+    if (player.saveRevision < 14) {
+      player.cmdHistory = [];
+    }
     player.saveRevision = latestSaveRevision;
   }
   function saveGame() {
@@ -7370,7 +7373,7 @@
   var init_playerData = __esm({
     "src/playerData.ts"() {
       "use strict";
-      latestSaveRevision = 13;
+      latestSaveRevision = 14;
       player = {
         saveRevision: latestSaveRevision,
         username: "",
@@ -7385,7 +7388,8 @@
         libraryAskedQuestions: [],
         serverLatencyMs: 1e3,
         scriptStepsWrote: {},
-        scriptStepsTried: {}
+        scriptStepsTried: {},
+        cmdHistory: []
       };
     }
   });
@@ -7721,396 +7725,6 @@
       init_constant();
       c = require_ansi_colors();
       c.enabled = true;
-    }
-  });
-
-  // node_modules/fontfaceobserver/fontfaceobserver.standalone.js
-  var require_fontfaceobserver_standalone = __commonJS({
-    "node_modules/fontfaceobserver/fontfaceobserver.standalone.js"(exports, module) {
-      (function() {
-        function p(a, c2) {
-          document.addEventListener ? a.addEventListener("scroll", c2, false) : a.attachEvent("scroll", c2);
-        }
-        function u(a) {
-          document.body ? a() : document.addEventListener ? document.addEventListener("DOMContentLoaded", function b() {
-            document.removeEventListener("DOMContentLoaded", b);
-            a();
-          }) : document.attachEvent("onreadystatechange", function g() {
-            if (document.readyState == "interactive" || document.readyState == "complete")
-              document.detachEvent("onreadystatechange", g), a();
-          });
-        }
-        ;
-        function w(a) {
-          this.g = document.createElement("div");
-          this.g.setAttribute("aria-hidden", "true");
-          this.g.appendChild(document.createTextNode(a));
-          this.h = document.createElement("span");
-          this.i = document.createElement("span");
-          this.m = document.createElement("span");
-          this.j = document.createElement("span");
-          this.l = -1;
-          this.h.style.cssText = "max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
-          this.i.style.cssText = "max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
-          this.j.style.cssText = "max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
-          this.m.style.cssText = "display:inline-block;width:200%;height:200%;font-size:16px;max-width:none;";
-          this.h.appendChild(this.m);
-          this.i.appendChild(this.j);
-          this.g.appendChild(this.h);
-          this.g.appendChild(this.i);
-        }
-        function x(a, c2) {
-          a.g.style.cssText = "max-width:none;min-width:20px;min-height:20px;display:inline-block;overflow:hidden;position:absolute;width:auto;margin:0;padding:0;top:-999px;white-space:nowrap;font-synthesis:none;font:" + c2 + ";";
-        }
-        function B(a) {
-          var c2 = a.g.offsetWidth, b = c2 + 100;
-          a.j.style.width = b + "px";
-          a.i.scrollLeft = b;
-          a.h.scrollLeft = a.h.scrollWidth + 100;
-          return a.l !== c2 ? (a.l = c2, true) : false;
-        }
-        function C(a, c2) {
-          function b() {
-            var e = g;
-            B(e) && e.g.parentNode !== null && c2(e.l);
-          }
-          var g = a;
-          p(a.h, b);
-          p(a.i, b);
-          B(a);
-        }
-        ;
-        function D(a, c2, b) {
-          c2 = c2 || {};
-          b = b || window;
-          this.family = a;
-          this.style = c2.style || "normal";
-          this.weight = c2.weight || "normal";
-          this.stretch = c2.stretch || "normal";
-          this.context = b;
-        }
-        var E = null, F = null, G = null, H = null;
-        function I(a) {
-          F === null && (M(a) && /Apple/.test(window.navigator.vendor) ? (a = /AppleWebKit\/([0-9]+)(?:\.([0-9]+))(?:\.([0-9]+))/.exec(window.navigator.userAgent), F = !!a && 603 > parseInt(a[1], 10)) : F = false);
-          return F;
-        }
-        function M(a) {
-          H === null && (H = !!a.document.fonts);
-          return H;
-        }
-        function N(a, c2) {
-          var b = a.style, g = a.weight;
-          if (G === null) {
-            var e = document.createElement("div");
-            try {
-              e.style.font = "condensed 100px sans-serif";
-            } catch (q) {
-            }
-            G = e.style.font !== "";
-          }
-          return [b, g, G ? a.stretch : "", "100px", c2].join(" ");
-        }
-        D.prototype.load = function(a, c2) {
-          var b = this, g = a || "BESbswy", e = 0, q = c2 || 3e3, J = new Date().getTime();
-          return new Promise(function(K, L) {
-            if (M(b.context) && !I(b.context)) {
-              var O = new Promise(function(r, t) {
-                function h() {
-                  new Date().getTime() - J >= q ? t(Error("" + q + "ms timeout exceeded")) : b.context.document.fonts.load(N(b, '"' + b.family + '"'), g).then(function(n) {
-                    1 <= n.length ? r() : setTimeout(h, 25);
-                  }, t);
-                }
-                h();
-              }), P = new Promise(function(r, t) {
-                e = setTimeout(function() {
-                  t(Error("" + q + "ms timeout exceeded"));
-                }, q);
-              });
-              Promise.race([P, O]).then(function() {
-                clearTimeout(e);
-                K(b);
-              }, L);
-            } else
-              u(function() {
-                function r() {
-                  var d;
-                  if (d = k != -1 && l != -1 || k != -1 && m != -1 || l != -1 && m != -1)
-                    (d = k != l && k != m && l != m) || (E === null && (d = /AppleWebKit\/([0-9]+)(?:\.([0-9]+))/.exec(window.navigator.userAgent), E = !!d && (536 > parseInt(d[1], 10) || parseInt(d[1], 10) === 536 && 11 >= parseInt(d[2], 10))), d = E && (k == y && l == y && m == y || k == z && l == z && m == z || k == A && l == A && m == A)), d = !d;
-                  d && (f.parentNode !== null && f.parentNode.removeChild(f), clearTimeout(e), K(b));
-                }
-                function t() {
-                  if (new Date().getTime() - J >= q)
-                    f.parentNode !== null && f.parentNode.removeChild(f), L(Error("" + q + "ms timeout exceeded"));
-                  else {
-                    var d = b.context.document.hidden;
-                    if (d === true || d === void 0)
-                      k = h.g.offsetWidth, l = n.g.offsetWidth, m = v.g.offsetWidth, r();
-                    e = setTimeout(t, 50);
-                  }
-                }
-                var h = new w(g), n = new w(g), v = new w(g), k = -1, l = -1, m = -1, y = -1, z = -1, A = -1, f = document.createElement("div");
-                f.dir = "ltr";
-                x(h, N(b, "sans-serif"));
-                x(n, N(b, "serif"));
-                x(v, N(b, "monospace"));
-                f.appendChild(h.g);
-                f.appendChild(n.g);
-                f.appendChild(v.g);
-                b.context.document.body.appendChild(f);
-                y = h.g.offsetWidth;
-                z = n.g.offsetWidth;
-                A = v.g.offsetWidth;
-                t();
-                C(h, function(d) {
-                  k = d;
-                  r();
-                });
-                x(h, N(b, '"' + b.family + '",sans-serif'));
-                C(n, function(d) {
-                  l = d;
-                  r();
-                });
-                x(n, N(b, '"' + b.family + '",serif'));
-                C(v, function(d) {
-                  m = d;
-                  r();
-                });
-                x(v, N(b, '"' + b.family + '",monospace'));
-              });
-          });
-        };
-        typeof module === "object" ? module.exports = D : (window.FontFaceObserver = D, window.FontFaceObserver.prototype.load = D.prototype.load);
-      })();
-    }
-  });
-
-  // src/term.ts
-  function setupTerm() {
-    const regularFont = new FontFaceObserver("Inconsolata", {
-      weight: 400
-    });
-    const boldFont = new FontFaceObserver("Inconsolata", {
-      weight: 700
-    });
-    Promise.all([regularFont.load(), boldFont.load()]).then(() => {
-      term.open(document.getElementById("terminal"));
-      term.onKey(handleTermKey);
-      term.focus();
-    });
-  }
-  function getCursorLine() {
-    return term.buffer.active.viewportY + term.buffer.active.cursorY;
-  }
-  function setCursorPos(targetX, targetY) {
-    return __async(this, null, function* () {
-      const viewportBottom = viewport + term.rows - 1;
-      if (viewportBottom < targetY) {
-        term.scrollLines(targetY - viewportBottom);
-        viewport = targetY - term.rows + 1;
-      }
-      term.write(ansi_escapes_default.cursorTo(targetX, targetY - viewport));
-    });
-  }
-  function setInterruptFlag(to) {
-    interruptFlag = to;
-  }
-  function lineInput(toPrint) {
-    return __async(this, null, function* () {
-      yield sleep(0);
-      curInput = [];
-      let curBlock = "";
-      for (let i = 0; i < toPrint.length; ) {
-        if (toPrint.charCodeAt(i) === 27) {
-          curBlock += toPrint.substring(i, i + 5);
-          i += 5;
-        } else {
-          curBlock += toPrint[i];
-          curInput.push(curBlock);
-          curBlock = "";
-          i += 1;
-        }
-      }
-      if (curBlock !== "") {
-        curInput[curInput.length - 1] += curBlock;
-      }
-      lineIndex = getCursorLine();
-      headerLen = curInput.length;
-      cursorIndex = headerLen;
-      lineListening = true;
-      yield renderLine();
-      while (lineListening) {
-        yield sleep(10);
-      }
-      return curInput.slice(headerLen).join("");
-    });
-  }
-  function renderLine() {
-    return __async(this, null, function* () {
-      viewport = term.buffer.active.viewportY;
-      const toPrint = curInput.join("");
-      yield setCursorPos(0, lineIndex);
-      term.write(ansi_escapes_default.eraseDown);
-      yield setCursorPos(0, lineIndex);
-      term.write(toPrint);
-      const targetX = cursorIndex % term.cols;
-      const targetY = lineIndex + Math.floor(cursorIndex / term.cols);
-      if (targetX === 0 && targetY >= term.buffer.active.length) {
-        term.write(" ");
-      }
-      yield setCursorPos(targetX, targetY);
-    });
-  }
-  function handleTermKey(e) {
-    return __async(this, null, function* () {
-      const key = e.domEvent.key;
-      const charCode = e.key.charCodeAt(0);
-      if (key === "F5") {
-        location.reload();
-      }
-      if (lineListening) {
-        if (e.key === "\r") {
-          term.writeln("");
-          lineListening = false;
-          return;
-        } else if (charCode === 127) {
-          if (cursorIndex !== headerLen) {
-            curInput.splice(cursorIndex - 1, 1);
-            cursorIndex -= 1;
-          }
-        } else if (key === "ArrowLeft") {
-          if (e.domEvent.ctrlKey) {
-            while (cursorIndex !== headerLen) {
-              cursorIndex -= 1;
-              if (cursorIndex !== headerLen && !isAlphanumeric(curInput[cursorIndex - 1]) && isAlphanumeric(curInput[cursorIndex])) {
-                break;
-              }
-            }
-          } else {
-            if (cursorIndex !== headerLen) {
-              cursorIndex -= 1;
-            }
-          }
-        } else if (key === "ArrowRight") {
-          if (e.domEvent.ctrlKey) {
-            while (cursorIndex !== curInput.length) {
-              cursorIndex += 1;
-              if (cursorIndex !== curInput.length && !isAlphanumeric(curInput[cursorIndex - 1]) && isAlphanumeric(curInput[cursorIndex])) {
-                break;
-              }
-            }
-          } else {
-            if (cursorIndex !== curInput.length) {
-              cursorIndex += 1;
-            }
-          }
-        } else if (key === "Home") {
-          cursorIndex = headerLen;
-        } else if (key === "End") {
-          cursorIndex = curInput.length;
-        } else if (key === "c" && e.domEvent.ctrlKey) {
-          term.writeln("");
-          curInput = curInput.splice(headerLen);
-          lineListening = false;
-          return;
-        } else if (32 <= charCode && charCode <= 126) {
-          if (curInput.length < 1024) {
-            curInput.splice(cursorIndex, 0, e.key);
-            cursorIndex += 1;
-          }
-        } else {
-          console.log("Unhandled key:", key, charCode);
-        }
-        yield renderLine();
-      } else if (key === "c" && e.domEvent.ctrlKey) {
-        if (!interruptFlag) {
-          interruptFlag = true;
-        }
-      }
-    });
-  }
-  var import_xterm, FontFaceObserver, term, viewport, cursorIndex, lineIndex, headerLen, curInput, lineListening, interruptFlag;
-  var init_term = __esm({
-    "src/term.ts"() {
-      "use strict";
-      import_xterm = __toESM(require_xterm());
-      init_asyncHelper();
-      init_ansi_escapes();
-      init_termHelper();
-      FontFaceObserver = require_fontfaceobserver_standalone();
-      term = new import_xterm.Terminal({ fontFamily: "Inconsolata" });
-      viewport = 0;
-      interruptFlag = true;
-    }
-  });
-
-  // src/boot.ts
-  function setupSystem() {
-    return __async(this, null, function* () {
-      yield dotLoadingBar({
-        desc: `Setting up ${printOS()} for the first time`,
-        dots: 5,
-        intervalMs: 400,
-        onFinish: ""
-      });
-      yield dotLoadingBar({
-        desc: "Activating serial code [RW9MG-QR4G3-2WRR9-TG7BH-33GXB]",
-        onFinish: "Serial activated!"
-      });
-      yield dotLoadingBar({
-        desc: "Starting OOBE",
-        dots: 10,
-        intervalMs: 400,
-        onFinish: ""
-      });
-      term.clear();
-      term.writeln(`Welcome to the ${printOS()} community, brought to you by ${printCompany()}!`);
-      term.writeln(`${printCompany()} is a new-era organization focusing on providing our customers with  state-of-the-art captcha-solving service.`);
-      term.writeln(`You've chosen ${printOS()} because you wish to join us in becoming and developing the  next-generation captcha solver.`);
-      term.writeln("You will find details on how to start solving captchas after the system setup.");
-      term.writeln("We wish to see you become one of our most proficient captcha solvers soon!");
-      term.writeln(`- ${printCompany()}`);
-      term.writeln("");
-      while (player.username === "") {
-        player.username = yield lineInput("Please enter your username: ");
-      }
-      term.writeln(`Nice to meet you, ${printUsername()}!`);
-      term.writeln("");
-      yield dotLoadingBar({
-        desc: `Registering ${printUsername()} on ${printCompany()}`,
-        intervalMs: player.serverLatencyMs
-      });
-      term.writeln("");
-      player.systemSetup = true;
-    });
-  }
-  function bootOS() {
-    return __async(this, null, function* () {
-      term.writeln("Starting " + version);
-      yield sleep(600);
-      term.writeln(`smpboot: CPU0: ${printCompany(false)}(R) Core(TM) T3-Gen0 CPU @ 1KHz`);
-      yield sleep(200);
-      term.writeln("r8169 0000:02:00.0 eth0: Link is Down");
-      yield sleep(1e3);
-      term.writeln("r8169 0000:02:00.0 eth0: Link is Up - 1Pkts/Full - flow control rx/tx");
-      yield sleep(200);
-      term.writeln("Welcome to " + printOS() + "!");
-      term.writeln("");
-      if (!player.systemSetup) {
-        yield setupSystem();
-      } else {
-        term.writeln(`Welcome back, ${printUsername()}!`);
-      }
-      term.writeln("Type 'help' for a list of commands");
-    });
-  }
-  var init_boot = __esm({
-    "src/boot.ts"() {
-      "use strict";
-      init_term();
-      init_constant();
-      init_asyncHelper();
-      init_termHelper();
-      init_playerData();
     }
   });
 
@@ -9093,6 +8707,16 @@
   function getPS() {
     return printUsername() + c.green("@capos") + " " + c.blue(player.path) + c.blue(" $ ");
   }
+  function moveCmdHistoryPtr(delta) {
+    const oldPtr = cmdHistoryPtr;
+    cmdHistoryPtr = Math.min(Math.max(0, cmdHistoryPtr + delta), player.cmdHistory.length);
+    return oldPtr !== cmdHistoryPtr;
+  }
+  function getCurCmdHistory() {
+    if (cmdHistoryPtr >= player.cmdHistory.length)
+      return "";
+    return player.cmdHistory[cmdHistoryPtr];
+  }
   function runCommandHandler() {
     return __async(this, null, function* () {
       setupHelpCommand();
@@ -9102,12 +8726,18 @@
       setupPythonCommand();
       setupVimCommand();
       for (; ; ) {
+        cmdHistoryPtr = player.cmdHistory.length;
         const cmd = yield lineInput(getPS());
+        cmdHistoryPtr = -1;
         const argv = cmd.trim().replace(/  +/g, " ").split(" ");
         const argc = argv.length;
         const cmdName = argv[0];
         if (cmdName === "") {
           continue;
+        }
+        player.cmdHistory.push(cmd);
+        while (player.cmdHistory.length > 1e3) {
+          player.cmdHistory.shift();
         }
         if (cmds[cmdName] instanceof Command && cmds[cmdName].isUnlocked()) {
           yield cmds[cmdName].cmdHandler(argc, argv);
@@ -9117,7 +8747,7 @@
       }
     });
   }
-  var Command, cmds;
+  var Command, cmds, cmdHistoryPtr;
   var init_cmd = __esm({
     "src/cmd.ts"() {
       "use strict";
@@ -9144,6 +8774,412 @@
         }
       };
       cmds = {};
+      cmdHistoryPtr = -1;
+    }
+  });
+
+  // node_modules/fontfaceobserver/fontfaceobserver.standalone.js
+  var require_fontfaceobserver_standalone = __commonJS({
+    "node_modules/fontfaceobserver/fontfaceobserver.standalone.js"(exports, module) {
+      (function() {
+        function p(a, c2) {
+          document.addEventListener ? a.addEventListener("scroll", c2, false) : a.attachEvent("scroll", c2);
+        }
+        function u(a) {
+          document.body ? a() : document.addEventListener ? document.addEventListener("DOMContentLoaded", function b() {
+            document.removeEventListener("DOMContentLoaded", b);
+            a();
+          }) : document.attachEvent("onreadystatechange", function g() {
+            if (document.readyState == "interactive" || document.readyState == "complete")
+              document.detachEvent("onreadystatechange", g), a();
+          });
+        }
+        ;
+        function w(a) {
+          this.g = document.createElement("div");
+          this.g.setAttribute("aria-hidden", "true");
+          this.g.appendChild(document.createTextNode(a));
+          this.h = document.createElement("span");
+          this.i = document.createElement("span");
+          this.m = document.createElement("span");
+          this.j = document.createElement("span");
+          this.l = -1;
+          this.h.style.cssText = "max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
+          this.i.style.cssText = "max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
+          this.j.style.cssText = "max-width:none;display:inline-block;position:absolute;height:100%;width:100%;overflow:scroll;font-size:16px;";
+          this.m.style.cssText = "display:inline-block;width:200%;height:200%;font-size:16px;max-width:none;";
+          this.h.appendChild(this.m);
+          this.i.appendChild(this.j);
+          this.g.appendChild(this.h);
+          this.g.appendChild(this.i);
+        }
+        function x(a, c2) {
+          a.g.style.cssText = "max-width:none;min-width:20px;min-height:20px;display:inline-block;overflow:hidden;position:absolute;width:auto;margin:0;padding:0;top:-999px;white-space:nowrap;font-synthesis:none;font:" + c2 + ";";
+        }
+        function B(a) {
+          var c2 = a.g.offsetWidth, b = c2 + 100;
+          a.j.style.width = b + "px";
+          a.i.scrollLeft = b;
+          a.h.scrollLeft = a.h.scrollWidth + 100;
+          return a.l !== c2 ? (a.l = c2, true) : false;
+        }
+        function C(a, c2) {
+          function b() {
+            var e = g;
+            B(e) && e.g.parentNode !== null && c2(e.l);
+          }
+          var g = a;
+          p(a.h, b);
+          p(a.i, b);
+          B(a);
+        }
+        ;
+        function D(a, c2, b) {
+          c2 = c2 || {};
+          b = b || window;
+          this.family = a;
+          this.style = c2.style || "normal";
+          this.weight = c2.weight || "normal";
+          this.stretch = c2.stretch || "normal";
+          this.context = b;
+        }
+        var E = null, F = null, G = null, H = null;
+        function I(a) {
+          F === null && (M(a) && /Apple/.test(window.navigator.vendor) ? (a = /AppleWebKit\/([0-9]+)(?:\.([0-9]+))(?:\.([0-9]+))/.exec(window.navigator.userAgent), F = !!a && 603 > parseInt(a[1], 10)) : F = false);
+          return F;
+        }
+        function M(a) {
+          H === null && (H = !!a.document.fonts);
+          return H;
+        }
+        function N(a, c2) {
+          var b = a.style, g = a.weight;
+          if (G === null) {
+            var e = document.createElement("div");
+            try {
+              e.style.font = "condensed 100px sans-serif";
+            } catch (q) {
+            }
+            G = e.style.font !== "";
+          }
+          return [b, g, G ? a.stretch : "", "100px", c2].join(" ");
+        }
+        D.prototype.load = function(a, c2) {
+          var b = this, g = a || "BESbswy", e = 0, q = c2 || 3e3, J = new Date().getTime();
+          return new Promise(function(K, L) {
+            if (M(b.context) && !I(b.context)) {
+              var O = new Promise(function(r, t) {
+                function h() {
+                  new Date().getTime() - J >= q ? t(Error("" + q + "ms timeout exceeded")) : b.context.document.fonts.load(N(b, '"' + b.family + '"'), g).then(function(n) {
+                    1 <= n.length ? r() : setTimeout(h, 25);
+                  }, t);
+                }
+                h();
+              }), P = new Promise(function(r, t) {
+                e = setTimeout(function() {
+                  t(Error("" + q + "ms timeout exceeded"));
+                }, q);
+              });
+              Promise.race([P, O]).then(function() {
+                clearTimeout(e);
+                K(b);
+              }, L);
+            } else
+              u(function() {
+                function r() {
+                  var d;
+                  if (d = k != -1 && l != -1 || k != -1 && m != -1 || l != -1 && m != -1)
+                    (d = k != l && k != m && l != m) || (E === null && (d = /AppleWebKit\/([0-9]+)(?:\.([0-9]+))/.exec(window.navigator.userAgent), E = !!d && (536 > parseInt(d[1], 10) || parseInt(d[1], 10) === 536 && 11 >= parseInt(d[2], 10))), d = E && (k == y && l == y && m == y || k == z && l == z && m == z || k == A && l == A && m == A)), d = !d;
+                  d && (f.parentNode !== null && f.parentNode.removeChild(f), clearTimeout(e), K(b));
+                }
+                function t() {
+                  if (new Date().getTime() - J >= q)
+                    f.parentNode !== null && f.parentNode.removeChild(f), L(Error("" + q + "ms timeout exceeded"));
+                  else {
+                    var d = b.context.document.hidden;
+                    if (d === true || d === void 0)
+                      k = h.g.offsetWidth, l = n.g.offsetWidth, m = v.g.offsetWidth, r();
+                    e = setTimeout(t, 50);
+                  }
+                }
+                var h = new w(g), n = new w(g), v = new w(g), k = -1, l = -1, m = -1, y = -1, z = -1, A = -1, f = document.createElement("div");
+                f.dir = "ltr";
+                x(h, N(b, "sans-serif"));
+                x(n, N(b, "serif"));
+                x(v, N(b, "monospace"));
+                f.appendChild(h.g);
+                f.appendChild(n.g);
+                f.appendChild(v.g);
+                b.context.document.body.appendChild(f);
+                y = h.g.offsetWidth;
+                z = n.g.offsetWidth;
+                A = v.g.offsetWidth;
+                t();
+                C(h, function(d) {
+                  k = d;
+                  r();
+                });
+                x(h, N(b, '"' + b.family + '",sans-serif'));
+                C(n, function(d) {
+                  l = d;
+                  r();
+                });
+                x(n, N(b, '"' + b.family + '",serif'));
+                C(v, function(d) {
+                  m = d;
+                  r();
+                });
+                x(v, N(b, '"' + b.family + '",monospace'));
+              });
+          });
+        };
+        typeof module === "object" ? module.exports = D : (window.FontFaceObserver = D, window.FontFaceObserver.prototype.load = D.prototype.load);
+      })();
+    }
+  });
+
+  // src/term.ts
+  function setupTerm() {
+    const regularFont = new FontFaceObserver("Inconsolata", {
+      weight: 400
+    });
+    const boldFont = new FontFaceObserver("Inconsolata", {
+      weight: 700
+    });
+    Promise.all([regularFont.load(), boldFont.load()]).then(() => {
+      term.open(document.getElementById("terminal"));
+      term.onKey(handleTermKey);
+      term.focus();
+    });
+  }
+  function getCursorLine() {
+    return term.buffer.active.viewportY + term.buffer.active.cursorY;
+  }
+  function setCursorPos(targetX, targetY) {
+    return __async(this, null, function* () {
+      const viewportBottom = viewport + term.rows - 1;
+      if (viewportBottom < targetY) {
+        term.scrollLines(targetY - viewportBottom);
+        viewport = targetY - term.rows + 1;
+      }
+      term.write(ansi_escapes_default.cursorTo(targetX, targetY - viewport));
+    });
+  }
+  function setInterruptFlag(to) {
+    interruptFlag = to;
+  }
+  function lineInput(toPrint) {
+    return __async(this, null, function* () {
+      yield sleep(0);
+      curInput = [];
+      let curBlock = "";
+      for (let i = 0; i < toPrint.length; ) {
+        if (toPrint.charCodeAt(i) === 27) {
+          curBlock += toPrint.substring(i, i + 5);
+          i += 5;
+        } else {
+          curBlock += toPrint[i];
+          curInput.push(curBlock);
+          curBlock = "";
+          i += 1;
+        }
+      }
+      if (curBlock !== "") {
+        curInput[curInput.length - 1] += curBlock;
+      }
+      lineIndex = getCursorLine();
+      headerLen = curInput.length;
+      cursorIndex = headerLen;
+      lineListening = true;
+      yield renderLine();
+      while (lineListening) {
+        yield sleep(10);
+      }
+      return curInput.slice(headerLen).join("");
+    });
+  }
+  function renderLine() {
+    return __async(this, null, function* () {
+      viewport = term.buffer.active.viewportY;
+      const toPrint = curInput.join("");
+      yield setCursorPos(0, lineIndex);
+      term.write(ansi_escapes_default.eraseDown);
+      yield setCursorPos(0, lineIndex);
+      term.write(toPrint);
+      const targetX = cursorIndex % term.cols;
+      const targetY = lineIndex + Math.floor(cursorIndex / term.cols);
+      if (targetX === 0 && targetY >= term.buffer.active.length) {
+        term.write(" ");
+      }
+      yield setCursorPos(targetX, targetY);
+    });
+  }
+  function handleTermKey(e) {
+    return __async(this, null, function* () {
+      const key = e.domEvent.key;
+      const charCode = e.key.charCodeAt(0);
+      if (key === "F5") {
+        location.reload();
+      }
+      if (lineListening) {
+        if (e.key === "\r") {
+          term.writeln("");
+          lineListening = false;
+          return;
+        } else if (charCode === 127) {
+          if (cursorIndex !== headerLen) {
+            curInput.splice(cursorIndex - 1, 1);
+            cursorIndex -= 1;
+          }
+        } else if (key === "ArrowLeft") {
+          if (e.domEvent.ctrlKey) {
+            while (cursorIndex !== headerLen) {
+              cursorIndex -= 1;
+              if (cursorIndex !== headerLen && !isAlphanumeric(curInput[cursorIndex - 1]) && isAlphanumeric(curInput[cursorIndex])) {
+                break;
+              }
+            }
+          } else {
+            if (cursorIndex !== headerLen) {
+              cursorIndex -= 1;
+            }
+          }
+        } else if (key === "ArrowRight") {
+          if (e.domEvent.ctrlKey) {
+            while (cursorIndex !== curInput.length) {
+              cursorIndex += 1;
+              if (cursorIndex !== curInput.length && !isAlphanumeric(curInput[cursorIndex - 1]) && isAlphanumeric(curInput[cursorIndex])) {
+                break;
+              }
+            }
+          } else {
+            if (cursorIndex !== curInput.length) {
+              cursorIndex += 1;
+            }
+          }
+        } else if (key === "Home") {
+          cursorIndex = headerLen;
+        } else if (key === "End") {
+          cursorIndex = curInput.length;
+        } else if (key === "c" && e.domEvent.ctrlKey) {
+          term.writeln("");
+          curInput = curInput.splice(headerLen);
+          lineListening = false;
+          return;
+        } else if (32 <= charCode && charCode <= 126) {
+          if (curInput.length < 1024) {
+            curInput.splice(cursorIndex, 0, e.key);
+            cursorIndex += 1;
+          }
+        } else if (key === "ArrowUp") {
+          if (cmdHistoryPtr !== -1) {
+            if (moveCmdHistoryPtr(-1)) {
+              curInput = curInput.slice(0, headerLen).concat(getCurCmdHistory().split(""));
+              cursorIndex = curInput.length;
+            }
+          }
+        } else if (key === "ArrowDown") {
+          if (cmdHistoryPtr !== -1) {
+            if (moveCmdHistoryPtr(1)) {
+              curInput = curInput.slice(0, headerLen).concat(getCurCmdHistory().split(""));
+              cursorIndex = curInput.length;
+            }
+          }
+        } else {
+          console.log("Unhandled key:", key, charCode);
+        }
+        yield renderLine();
+      } else if (key === "c" && e.domEvent.ctrlKey) {
+        if (!interruptFlag) {
+          interruptFlag = true;
+        }
+      }
+    });
+  }
+  var import_xterm, FontFaceObserver, term, viewport, cursorIndex, lineIndex, headerLen, curInput, lineListening, interruptFlag;
+  var init_term = __esm({
+    "src/term.ts"() {
+      "use strict";
+      import_xterm = __toESM(require_xterm());
+      init_asyncHelper();
+      init_ansi_escapes();
+      init_termHelper();
+      init_cmd();
+      FontFaceObserver = require_fontfaceobserver_standalone();
+      term = new import_xterm.Terminal({ fontFamily: "Inconsolata" });
+      viewport = 0;
+      interruptFlag = true;
+    }
+  });
+
+  // src/boot.ts
+  function setupSystem() {
+    return __async(this, null, function* () {
+      yield dotLoadingBar({
+        desc: `Setting up ${printOS()} for the first time`,
+        dots: 5,
+        intervalMs: 400,
+        onFinish: ""
+      });
+      yield dotLoadingBar({
+        desc: "Activating serial code [RW9MG-QR4G3-2WRR9-TG7BH-33GXB]",
+        onFinish: "Serial activated!"
+      });
+      yield dotLoadingBar({
+        desc: "Starting OOBE",
+        dots: 10,
+        intervalMs: 400,
+        onFinish: ""
+      });
+      term.clear();
+      term.writeln(`Welcome to the ${printOS()} community, brought to you by ${printCompany()}!`);
+      term.writeln(`${printCompany()} is a new-era organization focusing on providing our customers with  state-of-the-art captcha-solving service.`);
+      term.writeln(`You've chosen ${printOS()} because you wish to join us in becoming and developing the  next-generation captcha solver.`);
+      term.writeln("You will find details on how to start solving captchas after the system setup.");
+      term.writeln("We wish to see you become one of our most proficient captcha solvers soon!");
+      term.writeln(`- ${printCompany()}`);
+      term.writeln("");
+      while (player.username === "") {
+        player.username = yield lineInput("Please enter your username: ");
+      }
+      term.writeln(`Nice to meet you, ${printUsername()}!`);
+      term.writeln("");
+      yield dotLoadingBar({
+        desc: `Registering ${printUsername()} on ${printCompany()}`,
+        intervalMs: player.serverLatencyMs
+      });
+      term.writeln("");
+      player.systemSetup = true;
+    });
+  }
+  function bootOS() {
+    return __async(this, null, function* () {
+      term.writeln("Starting " + version);
+      yield sleep(600);
+      term.writeln(`smpboot: CPU0: ${printCompany(false)}(R) Core(TM) T3-Gen0 CPU @ 1KHz`);
+      yield sleep(200);
+      term.writeln("r8169 0000:02:00.0 eth0: Link is Down");
+      yield sleep(1e3);
+      term.writeln("r8169 0000:02:00.0 eth0: Link is Up - 1Pkts/Full - flow control rx/tx");
+      yield sleep(200);
+      term.writeln("Welcome to " + printOS() + "!");
+      term.writeln("");
+      if (!player.systemSetup) {
+        yield setupSystem();
+      } else {
+        term.writeln(`Welcome back, ${printUsername()}!`);
+      }
+      term.writeln("Type 'help' for a list of commands");
+    });
+  }
+  var init_boot = __esm({
+    "src/boot.ts"() {
+      "use strict";
+      init_term();
+      init_constant();
+      init_asyncHelper();
+      init_termHelper();
+      init_playerData();
     }
   });
 

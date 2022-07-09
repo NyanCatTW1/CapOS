@@ -2,6 +2,7 @@ import {Terminal} from 'xterm';
 import {sleep} from './misc/asyncHelper';
 import ansiEscapes from 'ansi-escapes';
 import {isAlphanumeric} from './misc/termHelper';
+import {cmdHistoryPtr, getCurCmdHistory, moveCmdHistoryPtr} from './cmd';
 const FontFaceObserver = require('fontfaceobserver');
 
 const term = new Terminal({fontFamily: 'Inconsolata'});
@@ -178,6 +179,24 @@ async function handleTermKey(e: {key: string; domEvent: KeyboardEvent}) {
       if (curInput.length < 1024) {
         curInput.splice(cursorIndex, 0, e.key);
         cursorIndex += 1;
+      }
+    } else if (key === 'ArrowUp') {
+      if (cmdHistoryPtr !== -1) {
+        if (moveCmdHistoryPtr(-1)) {
+          curInput = curInput
+            .slice(0, headerLen)
+            .concat(getCurCmdHistory().split(''));
+          cursorIndex = curInput.length;
+        }
+      }
+    } else if (key === 'ArrowDown') {
+      if (cmdHistoryPtr !== -1) {
+        if (moveCmdHistoryPtr(1)) {
+          curInput = curInput
+            .slice(0, headerLen)
+            .concat(getCurCmdHistory().split(''));
+          cursorIndex = curInput.length;
+        }
       }
     } else {
       console.log('Unhandled key:', key, charCode);
